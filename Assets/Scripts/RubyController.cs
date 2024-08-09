@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class RubyController : MonoBehaviour
 {
-    private Rigidbody2D rigi2d;
+    float speed = 23.0f;
+    public int maxHealth = 5;
+    int currentHealth;
+    public int health { get { return currentHealth; } }
+    Rigidbody2D rigi2d;
 
     // Start is called before the first frame update
     void Start()
     {
         rigi2d = GetComponent<Rigidbody2D>();
+        currentHealth = 1;// maxHealth;
     }
 
     // Update is called once per frame
@@ -19,9 +24,15 @@ public class RubyController : MonoBehaviour
         float vert = Input.GetAxis("Vertical");
 
         Vector2 position = rigi2d.position;
-        position.x += 23.0f * hori * Time.deltaTime;
-        position.y += 23.0f * vert * Time.deltaTime;
+        position.x += speed * hori * Time.deltaTime;
+        position.y += speed * vert * Time.deltaTime;
 
         rigi2d.MovePosition(position);
+    }
+
+    public void ChangeHealth(int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        Debug.Log(currentHealth + "/" + maxHealth);
     }
 }
