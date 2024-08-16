@@ -12,18 +12,25 @@ public class EnemyController : MonoBehaviour
     float timer;
     int direction = 1;
     Animator animator;
+    bool broken;
 
     // Start is called before the first frame update
     void Start()
     {
         rigi2D = GetComponent<Rigidbody2D>();
-        timer = changeTime;
         animator = GetComponent<Animator>();
+        timer = changeTime;
+        broken = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!broken)
+        {
+            return;
+        }
+
         timer -= Time.deltaTime;
 
         if (timer < 0)
@@ -58,5 +65,11 @@ public class EnemyController : MonoBehaviour
         {
             ruby.ChangeHealth(-1);
         }
+    }
+
+    public void Fix()
+    {
+        broken = false;
+        rigi2D.simulated = false;
     }
 }
