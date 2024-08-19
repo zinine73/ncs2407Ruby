@@ -71,5 +71,6 @@ public class EnemyController : MonoBehaviour
     {
         broken = false;
         rigi2D.simulated = false;
+        animator.SetTrigger("Fixed");
     }
 }
