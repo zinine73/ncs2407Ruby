@@ -152,6 +152,7 @@ MonoBehaviour:
   vertical: 0
   changeTime: 3
   smokeEffect: {fileID: 3559709900584981243}
+  fixEffect: {fileID: 363065728730733930, guid: 423ac3be4dd00d84986c32bd8e201ff4, type: 3}
 --- !u!95 &7782804272578546973
 Animator:
   serializedVersion: 5

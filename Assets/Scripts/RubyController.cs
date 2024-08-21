@@ -9,6 +9,7 @@ public class RubyController : MonoBehaviour
     int currentHealth;
     public int health { get { return currentHealth; } }
     public GameObject projectilePrefab;
+    public GameObject hitEffect;
 
     public float timeInvincible = 2.0f;
     bool isInvincible;
@@ -71,6 +72,7 @@ public class RubyController : MonoBehaviour
             animator.SetTrigger("Hit");
             isInvincible = true;
             invincibleTimer = timeInvincible;
+            Instantiate(hitEffect, rigi2D.position + Vector2.up * 0.5f, Quaternion.identity);
         }        
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
