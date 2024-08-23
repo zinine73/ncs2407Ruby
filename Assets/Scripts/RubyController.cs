@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class RubyController : MonoBehaviour
 {
-    float speed = 23.0f;
+    #region Public
+    public float speed = 3.0f;
     public int maxHealth = 5;
-    int currentHealth;
     public int health { get { return currentHealth; } }
     public GameObject projectilePrefab;
     public GameObject hitEffect;
-
     public float timeInvincible = 2.0f;
+    #endregion
+
+    #region private
+    int currentHealth;
     bool isInvincible;
     float invincibleTimer;
 
     Rigidbody2D rigi2D;
     Animator animator;
     Vector2 lookDirection = new Vector2(1, 0);
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -56,9 +60,30 @@ public class RubyController : MonoBehaviour
                 isInvincible = false;
         }
 
+#if (UNITY_EDITOR || UNITY_STANDALONE_WIN)
         if (Input.GetKeyDown(KeyCode.C))
         {
             Launch();
+        }
+#else
+        if (Input.GetMouseButtonDown(0))
+        {
+            Launch();
+        }
+#endif
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(rigi2D.position + Vector2.up * 0.2f,
+                lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+            if (hit.collider != null)
+            {
+                NPC jambi = hit.collider.GetComponent<NPC>();
+                if (jambi != null)
+                {
+                    jambi.DisplayDialog();
+                }
+            }
         }
     }
 
