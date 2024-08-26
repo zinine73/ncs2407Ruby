@@ -5,12 +5,28 @@ using UnityEngine;
 public class RubyController : MonoBehaviour
 {
     #region Public
-    public float speed = 3.0f;
+    public const int GOAL_FIXED_ROBOT = 3;
+    public float speed = 23.0f;
     public int maxHealth = 5;
     public int health { get { return currentHealth; } }
     public GameObject projectilePrefab;
     public GameObject hitEffect;
     public float timeInvincible = 2.0f;
+    public AudioClip hitClip;
+    public AudioClip throwClip;
+    public AudioClip questClip;
+    public int FixedRobotCount
+    {
+        get
+        {
+            return fixedRobot;
+        }
+        set
+        {
+            fixedRobot = value;
+        }
+    }
+        
     #endregion
 
     #region private
@@ -21,6 +37,8 @@ public class RubyController : MonoBehaviour
     Rigidbody2D rigi2D;
     Animator animator;
     Vector2 lookDirection = new Vector2(1, 0);
+    AudioSource audioSource;
+    int fixedRobot;
     #endregion
 
     // Start is called before the first frame update
@@ -29,6 +47,8 @@ public class RubyController : MonoBehaviour
         rigi2D = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        fixedRobot = 0;
     }
 
     // Update is called once per frame
@@ -60,17 +80,10 @@ public class RubyController : MonoBehaviour
                 isInvincible = false;
         }
 
-#if (UNITY_EDITOR || UNITY_STANDALONE_WIN)
         if (Input.GetKeyDown(KeyCode.C))
         {
             Launch();
         }
-#else
-        if (Input.GetMouseButtonDown(0))
-        {
-            Launch();
-        }
-#endif
 
         if (Input.GetKeyDown(KeyCode.X))
         {
@@ -81,6 +94,10 @@ public class RubyController : MonoBehaviour
                 NPC jambi = hit.collider.GetComponent<NPC>();
                 if (jambi != null)
                 {
+                    if (IsQuestComplete())
+                    {
+                        jambi.ChangeDialogValue();
+                    }
                     jambi.DisplayDialog();
                 }
             }
@@ -98,6 +115,7 @@ public class RubyController : MonoBehaviour
             isInvincible = true;
             invincibleTimer = timeInvincible;
             Instantiate(hitEffect, rigi2D.position + Vector2.up * 0.5f, Quaternion.identity);
+            PlaySound(hitClip);
         }        
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
@@ -114,5 +132,27 @@ public class RubyController : MonoBehaviour
         projectile.Launch(lookDirection, 300);
 
         animator.SetTrigger("Launch");
+        PlaySound(throwClip);
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
+    }
+
+    public void TellMeFixed()
+    {
+        fixedRobot++;
+    }
+
+    public bool IsQuestComplete()
+    {
+        bool value = false;
+        if (fixedRobot == GOAL_FIXED_ROBOT)
+        {
+            PlaySound(questClip);
+            value = true;
+        }
+        return value;
     }
 }

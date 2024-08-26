@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class NPC : MonoBehaviour
 {
     public float displayTime = 4.0f;
     public GameObject worldDialogBox;
     public GameObject UIDialogBox;
-    float timerDisplay;
+    public TMP_Text talkText;
 
+    float timerDisplay;
+     
     // Start is called before the first frame update
     void Start()
     {
@@ -42,5 +45,10 @@ public class NPC : MonoBehaviour
 #else
         UIDialogBox.SetActive(true);
 #endif
+    }
+
+    public void ChangeDialogValue()
+    {
+        talkText.text = "Wow! Good Job!";
     }
 }
