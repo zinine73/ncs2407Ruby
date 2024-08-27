@@ -6,7 +6,6 @@ public class RubyController : MonoBehaviour
 {
     #region Public
     public const int GOAL_FIXED_ROBOT = 3;
-    public float speed = 23.0f;
     public int maxHealth = 5;
     public int health { get { return currentHealth; } }
     public GameObject projectilePrefab;
@@ -26,10 +25,15 @@ public class RubyController : MonoBehaviour
             fixedRobot = value;
         }
     }
-        
+
     #endregion
 
     #region private
+#if (UNITY_EDITOR && UNITY_ANDROID)
+    float speed = 23.0f;
+#else
+    float speed = 3.0f;
+#endif
     int currentHealth;
     bool isInvincible;
     float invincibleTimer;
@@ -39,7 +43,8 @@ public class RubyController : MonoBehaviour
     Vector2 lookDirection = new Vector2(1, 0);
     AudioSource audioSource;
     int fixedRobot;
-    #endregion
+    PlayerMove moves;
+#endregion
 
     // Start is called before the first frame update
     void Start()
@@ -49,15 +54,20 @@ public class RubyController : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         fixedRobot = 0;
+        moves = GetComponent<PlayerMove>();
     }
 
     // Update is called once per frame
     void Update()
     {
+#if (!UNITY_ANDROID)
         float hori = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
 
         Vector2 move = new Vector2(hori, vert);
+#else
+        Vector2 move = moves.MoveInput.normalized;
+#endif
         if (!Mathf.Approximately(move.x, 0.0f) ||
             !Mathf.Approximately(move.y, 0.0f))
         {
@@ -87,20 +97,7 @@ public class RubyController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            RaycastHit2D hit = Physics2D.Raycast(rigi2D.position + Vector2.up * 0.2f,
-                lookDirection, 1.5f, LayerMask.GetMask("NPC"));
-            if (hit.collider != null)
-            {
-                NPC jambi = hit.collider.GetComponent<NPC>();
-                if (jambi != null)
-                {
-                    if (IsQuestComplete())
-                    {
-                        jambi.ChangeDialogValue();
-                    }
-                    jambi.DisplayDialog();
-                }
-            }
+            Talk();
         }
     }
 
@@ -122,7 +119,7 @@ public class RubyController : MonoBehaviour
         UIHealthBar.instance.SetValue(currentHealth / (float)maxHealth);
     }
 
-    void Launch()
+    public void Launch()
     {
         GameObject projectileObject = Instantiate(projectilePrefab,
             rigi2D.position + Vector2.up * 0.5f,
@@ -133,6 +130,24 @@ public class RubyController : MonoBehaviour
 
         animator.SetTrigger("Launch");
         PlaySound(throwClip);
+    }
+
+    public void Talk()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(rigi2D.position + Vector2.up * 0.2f,
+                lookDirection, 1.5f, LayerMask.GetMask("NPC"));
+        if (hit.collider != null)
+        {
+            NPC jambi = hit.collider.GetComponent<NPC>();
+            if (jambi != null)
+            {
+                if (IsQuestComplete())
+                {
+                    jambi.ChangeDialogValue();
+                }
+                jambi.DisplayDialog();
+            }
+        }
     }
 
     public void PlaySound(AudioClip clip)

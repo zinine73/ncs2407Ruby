@@ -9,7 +9,9 @@ public class NPC : MonoBehaviour
     public GameObject worldDialogBox;
     public GameObject UIDialogBox;
     public TMP_Text talkText;
-
+    public GameObject stickUI;
+    public GameObject bulletUI;
+    public GameObject talkUI;
     float timerDisplay;
      
     // Start is called before the first frame update
@@ -28,10 +30,11 @@ public class NPC : MonoBehaviour
             timerDisplay -= Time.deltaTime;
             if (timerDisplay < 0)
             {
-#if (UNITY_EDITOR || UNITY_STANDALONE_WIN)
+#if (!UNITY_ANDROID)
                 worldDialogBox.SetActive(false);
 #else
                 UIDialogBox.SetActive(false);
+                UIOnOff(true);
 #endif
             }
         }
@@ -40,15 +43,23 @@ public class NPC : MonoBehaviour
     public void DisplayDialog()
     {
         timerDisplay = displayTime;
-#if (UNITY_EDITOR || UNITY_STANDALONE_WIN)
+#if (!UNITY_ANDROID)
         worldDialogBox.SetActive(true);
 #else
         UIDialogBox.SetActive(true);
+        UIOnOff(false);
 #endif
     }
 
     public void ChangeDialogValue()
     {
         talkText.text = "Wow! Good Job!";
+    }
+
+    public void UIOnOff(bool value)
+    {
+        stickUI.SetActive(value);
+        bulletUI.SetActive(value);
+        talkUI.SetActive(value);
     }
 }
