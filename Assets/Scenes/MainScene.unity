@@ -14857,6 +14857,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7928631805974722307, guid: e5f7e266ccb68e24b84d584ad9d41afd, type: 3}
+      propertyPath: speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7928631805974722307, guid: e5f7e266ccb68e24b84d584ad9d41afd, type: 3}
       propertyPath: questClip
       value: 
       objectReference: {fileID: 8300000, guid: f987bfc0b774d3f4e82dc47e91f78584, type: 3}
