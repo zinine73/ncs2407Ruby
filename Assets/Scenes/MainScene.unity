@@ -14283,6 +14283,7 @@ MonoBehaviour:
   worldDialogBox: {fileID: 2087308988}
   UIDialogBox: {fileID: 1610119531}
   talkText: {fileID: 695542744}
+  talkUIText: {fileID: 737087439}
   stickUI: {fileID: 182104392}
   bulletUI: {fileID: 1548880339}
   talkUI: {fileID: 1298610185}

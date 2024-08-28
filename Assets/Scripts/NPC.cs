@@ -9,6 +9,7 @@ public class NPC : MonoBehaviour
     public GameObject worldDialogBox;
     public GameObject UIDialogBox;
     public TMP_Text talkText;
+    public TMP_Text talkUIText;
     public GameObject stickUI;
     public GameObject bulletUI;
     public GameObject talkUI;
@@ -53,7 +54,7 @@ public class NPC : MonoBehaviour
 
     public void ChangeDialogValue()
     {
-        talkText.text = "Wow! Good Job!";
+        talkText.text = talkUIText.text = "Thanks! Good Job!";
     }
 
     public void UIOnOff(bool value)
